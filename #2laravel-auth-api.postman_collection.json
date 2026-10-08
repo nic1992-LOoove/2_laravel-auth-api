@@ -1,0 +1,1409 @@
+{
+  "info": {
+    "_postman_id": "a41f50d0-d7b0-4540-9195-59cdaaade79d",
+    "name": "#2",
+    "description": "REST API autentikasi: Register, Login Email, Login WhatsApp + OTP, Lupa Password + OTP.\n\nCara pakai:\n1. Pastikan server jalan: php artisan serve (http://127.0.0.1:8000)\n2. Variable: base_url, token (isi dari response login), otp (isi dari dev_otp)\n3. Jalankan request berurutan per folder.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47135216"
+  },
+  "item": [
+    {
+      "name": "01 Register",
+      "item": [
+        {
+          "name": "Register berhasil (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Ada token', () => pm.expect(pm.response.json().data.token).to.be.ok);",
+                  "if (pm.response.json().data?.token) pm.collectionVariables.set('token', pm.response.json().data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tuan\",\n  \"email\": \"tuan@example.com\",\n  \"whatsapp\": \"628123456789\",\n  \"password\": \"Password123\",\n  \"password_confirmation\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Register berhasil (201)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Tuan\",\n  \"email\": \"tuan@example.com\",\n  \"whatsapp\": \"628123456789\",\n  \"password\": \"Password123\",\n  \"password_confirmation\": \"Password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/register",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": true,\r\n    \"message\": \"Registration successful\",\r\n    \"data\": {\r\n        \"user\": {\r\n            \"id\": 5,\r\n            \"name\": \"Tuan Minato\",\r\n            \"email\": \"tuanMinato@example.com\",\r\n            \"whatsapp\": \"628123456788\",\r\n            \"created_at\": \"2026-10-08T07:33:14.000000Z\",\r\n            \"updated_at\": \"2026-10-08T07:33:14.000000Z\"\r\n        },\r\n        \"token\": \"12|cDjG6I9gVYAL2Ly7WCZpymSRrVMzRASdBtqzb51K7a1e8750\"\r\n    }"
+            },
+            {
+              "name": "Register email duplikat (422)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Tuan Dua\",\n  \"email\": \"tuan@example.com\",\n  \"whatsapp\": \"628123456780\",\n  \"password\": \"Password123\",\n  \"password_confirmation\": \"Password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/register",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"message\": \"The email has already been taken. (and 1 more error)\",\r\n    \"errors\": {\r\n        \"email\": [\r\n            \"The email has already been taken.\"\r\n        ],\r\n        \"whatsapp\": [\r\n            \"The whatsapp has already been taken.\"\r\n        ]\r\n    }\r\n}"
+            },
+            {
+              "name": "Register whatsapp duplikat (422)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Tuan Tiga\",\n  \"email\": \"tuan3@example.com\",\n  \"whatsapp\": \"628123456789\",\n  \"password\": \"Password123\",\n  \"password_confirmation\": \"Password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/register",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"message\": \"The whatsapp has already been taken.\",\r\n    \"errors\": {\r\n        \"whatsapp\": [\r\n            \"The whatsapp has already been taken.\"\r\n        ]\r\n    }\r\n}"
+            },
+            {
+              "name": "Register password < 8 karakter (422)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Tuan\",\n  \"email\": \"pendek@example.com\",\n  \"whatsapp\": \"6281111111\",\n  \"password\": \"abc123\",\n  \"password_confirmation\": \"abc123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/register",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"message\": \"The whatsapp has already been taken. (and 1 more error)\",\r\n    \"errors\": {\r\n        \"whatsapp\": [\r\n            \"The whatsapp has already been taken.\"\r\n        ],\r\n        \"password\": [\r\n            \"The password field must be at least 8 characters.\"\r\n        ]\r\n    }"
+            },
+            {
+              "name": "Register password tidak cocok (422)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Tuan\",\n  \"email\": \"cocok@example.com\",\n  \"whatsapp\": \"6282222222\",\n  \"password\": \"Password123\",\n  \"password_confirmation\": \"Password456\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/register",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"message\": \"The password field confirmation does not match.\",\r\n    \"errors\": {\r\n        \"password\": [\r\n            \"The password field confirmation does not match.\"\r\n        ]\r\n    }\r\n}"
+            },
+            {
+              "name": "Register field kosong (422)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"\",\n  \"email\": \"bukan-email\",\n  \"whatsapp\": \"\",\n  \"password\": \"\",\n  \"password_confirmation\": \"\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/register",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"message\": \"The name field is required. (and 3 more errors)\",\r\n    \"errors\": {\r\n        \"name\": [\r\n            \"The name field is required.\"\r\n        ],\r\n        \"email\": [\r\n            \"The email field must be a valid email address.\"\r\n        ],\r\n        \"whatsapp\": [\r\n            \"The whatsapp field is required.\"\r\n        ],\r\n        \"password\": [\r\n            \"The password field is required.\"\r\n        ]\r\n    }\r\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 Login Email",
+      "item": [
+        {
+          "name": "Login berhasil (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Token tersimpan', () => { pm.collectionVariables.set('token', pm.response.json().data.token); pm.expect(pm.response.json().data.token).to.be.ok; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"tuan@example.com\",\n  \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Login berhasil (200)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"tuan@example.com\",\n  \"password\": \"Password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"success\": true,\r\n    \"message\": \"Login successful\",\r\n    \"data\": {\r\n        \"user\": {\r\n            \"id\": 4,\r\n            \"name\": \"Tuan Dua\",\r\n            \"email\": \"tuan@example.com\",\r\n            \"whatsapp\": \"628123456780\",\r\n            \"created_at\": \"2026-10-07T07:51:14.000000Z\",\r\n            \"updated_at\": \"2026-10-07T07:51:14.000000Z\"\r\n        },\r\n        \"token\": \"13|DYAEp5adrIF9w3Wx7B88d8e9c4FBCvQJchUdUZea5e60bcd4\"\r\n    }\r\n}"
+            },
+            {
+              "name": "Login password salah (401)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"tuan@example.com\",\n  \"password\": \"Wrong1234\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"success\": false,\r\n    \"message\": \"Invalid email or password\"\r\n}"
+            },
+            {
+              "name": "Login email tidak terdaftar (401)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"tidakada@example.com\",\n  \"password\": \"Password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"success\": false,\r\n    \"message\": \"Invalid email or password\"\r\n}"
+            },
+            {
+              "name": "Login field kosong (422)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"\",\n  \"password\": \"\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"message\": \"The email field is required. (and 1 more error)\",\r\n    \"errors\": {\r\n        \"email\": [\r\n            \"The email field is required.\"\r\n        ],\r\n        \"password\": [\r\n            \"The password field is required.\"\r\n        ]\r\n    }\r\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 Login WhatsApp OTP",
+      "item": [
+        {
+          "name": "1. Request OTP nomor terdaftar (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('OTP tersimpan ke variabel otp', () => { const o = pm.response.json().data.dev_otp; pm.collectionVariables.set('otp', o); pm.expect(o).to.be.ok; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"whatsapp\": \"628123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/whatsapp/request-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "whatsapp",
+                "request-otp"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "1. Request OTP nomor terdaftar (200)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"whatsapp\": \"628123456789\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/whatsapp/request-otp",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "whatsapp",
+                    "request-otp"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"success\": true,\r\n    \"message\": \"OTP generated. In production, send it through WhatsApp provider.\",\r\n    \"data\": {\r\n        \"expires_in_minutes\": 5,\r\n        \"dev_otp\": \"530926\"\r\n    }\r\n}"
+            },
+            {
+              "name": "2. Verify OTP berhasil (200) + token",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"whatsapp\": \"628123456789\",\n  \"otp\": \"{{otp}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/whatsapp/verify-otp",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "whatsapp",
+                    "verify-otp"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"success\": true,\r\n    \"message\": \"WhatsApp login successful\",\r\n    \"data\": {\r\n        \"user\": {\r\n            \"id\": 2,\r\n            \"name\": \"Budi\",\r\n            \"email\": \"budi@mail.com\",\r\n            \"whatsapp\": \"628123456789\",\r\n            \"created_at\": \"2026-10-07T06:09:55.000000Z\",\r\n            \"updated_at\": \"2026-10-07T06:09:55.000000Z\"\r\n        },\r\n        \"token\": \"14|QE1MF1TWyb1RKGlgYrz5BzSG4lIZrUdbOfxeLYmD23279282\"\r\n    }\r\n}"
+            },
+            {
+              "name": "1b. Request OTP nomor tidak terdaftar (404)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"whatsapp\": \"6280000000000\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/whatsapp/request-otp",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "whatsapp",
+                    "request-otp"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"success\": false,\r\n    \"message\": \"WhatsApp number is not registered\"\r\n}"
+            },
+            {
+              "name": "2b. Verify OTP salah (422)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"whatsapp\": \"628123456789\",\n  \"otp\": \"000000\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/whatsapp/verify-otp",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "whatsapp",
+                    "verify-otp"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "",
+              "header": [],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\r\n    \"success\": false,\r\n    \"message\": \"Invalid or expired OTP\"\r\n}"
+            },
+            {
+              "name": "2c. Verify OTP expired / sudah dipakai (422)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"whatsapp\": \"628123456789\",\n  \"otp\": \"{{otp}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/whatsapp/verify-otp",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "whatsapp",
+                    "verify-otp"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": false,\r\n    \"message\": \"Invalid or expired OTP\"\r\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 Lupa Password OTP",
+      "item": [
+        {
+          "name": "1. Request OTP email terdaftar (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('OTP tersimpan ke variabel otp', () => { const o = pm.response.json().data.dev_otp; pm.collectionVariables.set('otp', o); pm.expect(o).to.be.ok; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"tuan@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password/request-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "forgot-password",
+                "request-otp"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "1. Request OTP email terdaftar (200)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"tuan@example.com\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/forgot-password/request-otp",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "forgot-password",
+                    "request-otp"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": true,\r\n    \"message\": \"OTP generated. In production, send it through the configured channel.\",\r\n    \"data\": {\r\n        \"expires_in_minutes\": 5,\r\n        \"dev_otp\": \"365571\"\r\n    }\r\n}"
+            },
+            {
+              "name": "1b. Request OTP email tidak terdaftar (404)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"tidakada@example.com\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/forgot-password/request-otp",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "forgot-password",
+                    "request-otp"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": false,\r\n    \"message\": \"User not found\"\r\n}"
+            },
+            {
+              "name": "2. Verify OTP (200)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"tuan@example.com\",\n  \"otp\": \"{{otp}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/forgot-password/verify-otp",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "forgot-password",
+                    "verify-otp"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": true,\r\n    \"message\": \"OTP verified successfully\",\r\n    \"data\": []\r\n}"
+            },
+            {
+              "name": "2b. Verify OTP salah (422)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"tuan@example.com\",\n  \"otp\": \"000000\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/forgot-password/verify-otp",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "forgot-password",
+                    "verify-otp"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": false,\r\n    \"message\": \"Invalid or expired OTP\"\r\n}"
+            },
+            {
+              "name": "3. Reset password berhasil (200)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"tuan@example.com\",\n  \"otp\": \"{{otp}}\",\n  \"password\": \"NewPassword123\",\n  \"password_confirmation\": \"NewPassword123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/reset-password",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "reset-password"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": true,\r\n    \"message\": \"Password reset successfully\",\r\n    \"data\": []\r\n}"
+            },
+            {
+              "name": "3b. Reset password OTP belum diverifikasi (422)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"tuan@example.com\",\n  \"otp\": \"123456\",\n  \"password\": \"NewPassword123\",\n  \"password_confirmation\": \"NewPassword123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/reset-password",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "reset-password"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": false,\r\n    \"message\": \"OTP verification required or expired\"\r\n}"
+            },
+            {
+              "name": "3c. Reset password password tidak cocok (422)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"tuan@example.com\",\n  \"otp\": \"{{otp}}\",\n  \"password\": \"NewPassword123\",\n  \"password_confirmation\": \"Bedaaa123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/reset-password",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "reset-password"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"message\": \"The password field confirmation does not match.\",\r\n    \"errors\": {\r\n        \"password\": [\r\n            \"The password field confirmation does not match.\"\r\n        ]\r\n    }\r\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 Protected (me & logout)",
+      "item": [
+        {
+          "name": "GET me dengan token (200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "GET me dengan token (200)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/me",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": true,\r\n    \"message\": \"Profile retrieved\",\r\n    \"data\": {\r\n        \"user\": {\r\n            \"id\": 2,\r\n            \"name\": \"Budi\",\r\n            \"email\": \"budi@mail.com\",\r\n            \"whatsapp\": \"628123456789\",\r\n            \"created_at\": \"2026-10-07T06:09:55.000000Z\",\r\n            \"updated_at\": \"2026-10-07T06:09:55.000000Z\"\r\n        }\r\n    }\r\n}"
+            },
+            {
+              "name": "GET me tanpa token (401)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/me",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"message\": \"Unauthenticated.\"\r\n}"
+            },
+            {
+              "name": "GET me token salah (401)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer token-salah-bukan-nyata"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/me",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"message\": \"Unauthenticated.\"\r\n}"
+            },
+            {
+              "name": "POST logout (200) - token hangus",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/logout",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": true,\r\n    \"message\": \"Logout successful\",\r\n    \"data\": []\r\n}"
+            },
+            {
+              "name": "POST logout dua kali (401) - token sudah hangus",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/logout",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": false,\r\n    \"message\": \"SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it (Connection: mysql, Host: 127.0.0.1, Port: 3306, Database: laravel_auth_api, SQL: select * from `personal_access_tokens` where `personal_access_tokens`.`id` = 14 limit 1)\"\r\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06 Error Handling",
+      "item": [
+        {
+          "name": "Endpoint tidak ada (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/tidak-ada",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "tidak-ada"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Endpoint tidak ada (404)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/tidak-ada",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "tidak-ada"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"success\": false,\r\n    \"message\": \"Endpoint not found\"\r\n}"
+            },
+            {
+              "name": "Method salah - GET login (405)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"message\": \"The GET method is not supported for route api/auth/login. Supported methods: POST.\",\r\n    \"exception\": \"Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\MethodNotAllowedHttpException\",\r\n    \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\AbstractRouteCollection.php\",\r\n    \"line\": 130,\r\n    \"trace\": [\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\AbstractRouteCollection.php\",\r\n            \"line\": 115,\r\n            \"function\": \"requestMethodNotAllowed\",\r\n            \"class\": \"Illuminate\\\\Routing\\\\AbstractRouteCollection\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\AbstractRouteCollection.php\",\r\n            \"line\": 41,\r\n            \"function\": \"getRouteForMethods\",\r\n            \"class\": \"Illuminate\\\\Routing\\\\AbstractRouteCollection\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\RouteCollection.php\",\r\n            \"line\": 184,\r\n            \"function\": \"handleMatchedRoute\",\r\n            \"class\": \"Illuminate\\\\Routing\\\\AbstractRouteCollection\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\Router.php\",\r\n            \"line\": 777,\r\n            \"function\": \"match\",\r\n            \"class\": \"Illuminate\\\\Routing\\\\RouteCollection\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\Router.php\",\r\n            \"line\": 764,\r\n            \"function\": \"findRoute\",\r\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\Router.php\",\r\n            \"line\": 753,\r\n            \"function\": \"dispatchToRoute\",\r\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Kernel.php\",\r\n            \"line\": 200,\r\n            \"function\": \"dispatch\",\r\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\r\n            \"line\": 180,\r\n            \"function\": \"{closure:Illuminate\\\\Foundation\\\\Http\\\\Kernel::dispatchToRouter():197}\",\r\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest.php\",\r\n            \"line\": 21,\r\n            \"function\": \"{closure:Illuminate\\\\Pipeline\\\\Pipeline::prepareDestination():178}\",\r\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull.php\",\r\n            \"line\": 31,\r\n            \"function\": \"handle\",\r\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\r\n            \"line\": 219,\r\n            \"function\": \"handle\",\r\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest.php\",\r\n            \"line\": 21,\r\n            \"function\": \"{closure:{closure:Illuminate\\\\Pipeline\\\\Pipeline::carry():194}:195}\",\r\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings.php\",\r\n            \"line\": 51,\r\n            \"function\": \"handle\",\r\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\r\n            \"line\": 219,\r\n            \"function\": \"handle\",\r\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize.php\",\r\n            \"line\": 27,\r\n            \"function\": \"{closure:{closure:Illuminate\\\\Pipeline\\\\Pipeline::carry():194}:195}\",\r\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\r\n            \"line\": 219,\r\n            \"function\": \"handle\",\r\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance.php\",\r\n            \"line\": 109,\r\n            \"function\": \"{closure:{closure:Illuminate\\\\Pipeline\\\\Pipeline::carry():194}:195}\",\r\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\r\n            \"line\": 219,\r\n            \"function\": \"handle\",\r\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Http\\\\Middleware\\\\HandleCors.php\",\r\n            \"line\": 74,\r\n            \"function\": \"{closure:{closure:Illuminate\\\\Pipeline\\\\Pipeline::carry():194}:195}\",\r\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\r\n            \"line\": 219,\r\n            \"function\": \"handle\",\r\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\HandleCors\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Http\\\\Middleware\\\\TrustProxies.php\",\r\n            \"line\": 58,\r\n            \"function\": \"{closure:{closure:Illuminate\\\\Pipeline\\\\Pipeline::carry():194}:195}\",\r\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\r\n            \"line\": 219,\r\n            \"function\": \"handle\",\r\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\TrustProxies\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks.php\",\r\n            \"line\": 22,\r\n            \"function\": \"{closure:{closure:Illuminate\\\\Pipeline\\\\Pipeline::carry():194}:195}\",\r\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\r\n            \"line\": 219,\r\n            \"function\": \"handle\",\r\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Http\\\\Middleware\\\\ValidatePathEncoding.php\",\r\n            \"line\": 26,\r\n            \"function\": \"{closure:{closure:Illuminate\\\\Pipeline\\\\Pipeline::carry():194}:195}\",\r\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\r\n            \"line\": 219,\r\n            \"function\": \"handle\",\r\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePathEncoding\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\r\n            \"line\": 137,\r\n            \"function\": \"{closure:{closure:Illuminate\\\\Pipeline\\\\Pipeline::carry():194}:195}\",\r\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Kernel.php\",\r\n            \"line\": 175,\r\n            \"function\": \"then\",\r\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Kernel.php\",\r\n            \"line\": 144,\r\n            \"function\": \"sendRequestThroughRouter\",\r\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Application.php\",\r\n            \"line\": 1220,\r\n            \"function\": \"handle\",\r\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\public\\\\index.php\",\r\n            \"line\": 17,\r\n            \"function\": \"handleRequest\",\r\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\r\n            \"type\": \"->\"\r\n        },\r\n        {\r\n            \"file\": \"C:\\\\Users\\\\LOQ 30\\\\Downloads\\\\#2\\\\laravel-auth-api\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\resources\\\\server.php\",\r\n            \"line\": 23,\r\n            \"function\": \"require_once\"\r\n        }\r\n    ]\r\n}"
+            },
+            {
+              "name": "Body bukan JSON (422/415)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "ini bukan json {"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "{\r\n    \"message\": \"The email field is required. (and 1 more error)\",\r\n    \"errors\": {\r\n        \"email\": [\r\n            \"The email field is required.\"\r\n        ],\r\n        \"password\": [\r\n            \"The password field is required.\"\r\n        ]\r\n    }\r\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "otp",
+      "value": ""
+    },
+    {
+      "key": "email",
+      "value": "tuan@example.com"
+    },
+    {
+      "key": "whatsapp",
+      "value": "628123456789"
+    },
+    {
+      "key": "password",
+      "value": "Password123"
+    }
+  ]
+}
